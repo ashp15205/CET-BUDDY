@@ -6,7 +6,7 @@ import pandas as pd
 app = FastAPI()
 
 # Serve static frontend
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")
+app.mount("/", StaticFiles(directory="frontend", html=True), name="static")
 
 # --- Your existing logic ---
 df = pd.read_csv("cutoff.csv")
