@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CET Buddy – MHT-CET College Finder (B.E./B.Tech)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
+
+  <meta name="description"
+    content="CETBuddy helps you find eligible B.E./B.Tech colleges in Maharashtra based on MHT-CET percentile & category. Powered by official CAP cutoff data.">
+  <meta name="keywords"
+    content="CETBuddy, MHT-CET, College Finder, B.E., B.Tech, Maharashtra, Cutoff, CAP Round, CET college list">
+
+  <link rel="stylesheet" href="index.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="main-header">
+  <div class="logo">🏫 CET Buddy</div>
+</header>
+
+  <div class="hero">
+    <div class="container homepage">
+      <h1>👋 Welcome to <span style="color:#4c7fff;">CET Buddy</span></h1>
+      <p class="tagline">Instantly find eligible engineering colleges in Maharashtra based on your percentile.</p>
+
+      <section>
+        <h2>🎓 What is CETBuddy?</h2>
+        <p>
+          <strong>CETBuddy</strong> is your personal tool to explore <strong>B.E./B.Tech colleges</strong> in Maharashtra using your <strong>MHT-CET</strong> score.
+          Just enter your percentile and category to get a customized list based on official <strong>CAP Round 1</strong> cutoff data.
+        </p>
+      </section>
+
+      <section>
+        <h2>🚀 How It Works</h2>
+        <ul>
+          <li>✅ Uses official 2024-25 CAP Round 1 cutoffs</li>
+          <li>✅ Filters by percentile, category, college, or branch</li>
+          <li>✅ Generates an eligible college list instantly</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>📝 What You Need</h2>
+        <ol>
+          <li>Your MHT-CET Percentile (e.g. 96.45)</li>
+          <li>Your Category (e.g. GOPENS, LOPENH)</li>
+          <li>Preferred College or Branch (optional)</li>
+        </ol>
+      </section>
+
+      <div class="button-wrapper">
+        <button class="start-btn" onclick="navigateToPredictor()">🔍 Start Now</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p class="disclaimer">
+      🔔 <strong>Disclaimer:</strong> CETBuddy is for informational use only. Results are based on public CAP Round 1 MHT-CET data for 2024-25. Please verify with official sources like
+      <a href="https://cetcell.mahacet.org/" target="_blank">cetcell.mahacet.org</a>.
+    </p>
+    <strong>Source: </strong><a href="https://fe2024.mahacet.org/StaticPages/HomePage" target="_blank">CAP Round 1 Cutoffs</a>.
+   <p class="credits">
+  🧑‍💻 Built by <strong>Ashish Patil</strong> <span>|</span>
+  <a href="https://www.linkedin.com/in/ashish-patil-915363289/" target="_blank" class="linkedin-link" title="Ashish Patil on LinkedIn">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" />
+  </a>
+</p>
+
+</p>
+
+  </footer>
+
+  <!-- Loader -->
+  <div id="page-loader" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-family: sans-serif;
+    margin-left: 15px;
+  ">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <script>
+    function navigateToPredictor() {
+      const loader = document.getElementById("page-loader");
+      loader.style.display = "flex";
+      setTimeout(() => {
+        window.location.href = "predictor.html";
+      }, 1000);
+    }
+  </script>
+</body>
+
+</html>
