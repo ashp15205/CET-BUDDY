@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const collegeSelect = document.getElementById("college");
 
   try {
-    const res = await fetch("http://localhost:8000/dropdown-options");
+    const res = await fetch("https://cet-buddy.onrender.com/dropdown-options");
     const options = await res.json();
 
     const populateSelect = (selectEl, items, placeholder) => {
