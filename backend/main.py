@@ -1,42 +1,43 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from predictor import load_df, get_eligible_colleges, get_dropdown_options
-
-# Load the data globally once
-df = load_df()
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import pandas as pd
 
 app = FastAPI()
 
-# Enable CORS (for frontend requests)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Serve static frontend
+app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")
 
-# Define request schema
-class UserInput(BaseModel):
-    percentile: float
-    category: str
-    branch: str | None = None
-    college: str | None = None
+# --- Your existing logic ---
+df = pd.read_csv("cutoff.csv")
 
-# POST: Predict eligible colleges
-@app.post("/predict")
-def predict(data: UserInput):
-    results = get_eligible_colleges(
-        df=df,
-        percentile=data.percentile,
-        category=data.category,
-        branch=data.branch,
-        college=data.college
-    )
-    return {"colleges": results}
-
-# GET: Dropdown values for form fields
 @app.get("/dropdown-options")
 def dropdown_options():
-    return JSONResponse(get_dropdown_options(df))
+    return {
+        "categories": sorted(df["Category"].dropna().unique().tolist()),
+        "branches": sorted(df["Branch"].dropna().unique().tolist()),
+        "colleges": sorted(df["College Name"].dropna().unique().tolist())
+    }
+
+@app.post("/predict")
+def predict(payload: dict):
+    percentile = float(payload.get("percentile", 0))
+    category = payload.get("category", "")
+    branch = payload.get("branch", "")
+    college = payload.get("college", "")
+
+    filtered = df[
+        (df["Category"].str.upper() == category.upper()) &
+        (df["Percentile"] <= percentile)
+    ]
+
+    if branch:
+        filtered = filtered[filtered["Branch"].str.contains(branch, case=False, na=False)]
+    if college:
+        filtered = filtered[filtered["College Name"].str.contains(college, case=False, na=False)]
+
+    result = filtered.sort_values(by="Percentile", ascending=False)[
+        ["College Code", "College Name", "Branch", "Category", "Percentile"]
+    ].to_dict(orient="records")
+
+    return {"colleges": result}
