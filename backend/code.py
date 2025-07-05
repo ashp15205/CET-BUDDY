@@ -1,38 +1,39 @@
 import pandas as pd
 
-# Step 1: Load both CSV files
-df_cutoff = pd.read_csv("cutoff 24-25.csv")
-df_generated = pd.read_csv("cutoff 23-24.csv")
+# Step 1: Load CSV files
+df_23 = pd.read_csv("cutoff 23-24.csv")
+df_24 = pd.read_csv("cutoff 24-25.csv")
 
-# Step 2: Clean the Category column (remove .1, .2, etc.)
-df_cutoff['Category'] = df_cutoff['Category'].astype(str).str.replace(r'\.\d+$', '', regex=True)
-df_generated['Category'] = df_generated['Category'].astype(str).str.replace(r'\.\d+$', '', regex=True)
+# Step 2: Clean College Name and remove colons, quotes, semicolons
+def clean_college_name(name):
+    return str(name).replace('"', '').replace(':', '').replace(';', '').strip().rstrip(',')
 
-# Step 3: Convert percentiles to numeric and handle errors
-df_cutoff['Percentile'] = pd.to_numeric(df_cutoff['Percentile'], errors='coerce')
-df_generated['Percentile'] = pd.to_numeric(df_generated['Percentile'], errors='coerce')
+df_23['College Name'] = df_23['College Name'].apply(clean_college_name)
+df_24['College Name'] = df_24['College Name'].apply(clean_college_name)
 
-# Step 4: Group both dataframes by the 4 keys and take max percentile
-df_cutoff = df_cutoff.groupby(
-    ['College Code', 'College Name', 'Branch', 'Category'], as_index=False
-).agg({'Percentile': 'max'})
+# Step 3: Extract base college name (remove city)
+df_23['Base Name'] = df_23['College Name'].str.extract(r'^(.+?)(?:,\s*[^,]+)?$')[0].str.strip()
+df_24['Base Name'] = df_24['College Name'].str.extract(r'^(.+?)(?:,\s*[^,]+)?$')[0].str.strip()
 
-df_generated = df_generated.groupby(
-    ['College Code', 'College Name', 'Branch', 'Category'], as_index=False
-).agg({'Percentile': 'max'}).rename(columns={'Percentile': 'Percentile 2'})
+# Step 4: Convert Percentile to numeric
+df_23['Percentile'] = pd.to_numeric(df_23['Percentile'], errors='coerce')
+df_24['Percentile'] = pd.to_numeric(df_24['Percentile'], errors='coerce')
 
-# Step 5: Merge on all 4 key columns
-merged = pd.merge(
-    df_cutoff,
-    df_generated,
-    on=['College Code', 'College Name', 'Branch', 'Category'],
-    how='outer'  # keep all rows
-)
+# Step 5: Group by Base Name, Branch, Category
+group_cols = ['Base Name', 'Branch', 'Category']
+df_23_grouped = df_23.groupby(group_cols, as_index=False)['Percentile'].max().rename(columns={'Percentile': 'Percentile 23-24'})
+df_24_grouped = df_24.groupby(group_cols, as_index=False)['Percentile'].max().rename(columns={'Percentile': 'Percentile 24-25'})
 
-# Step 6: Replace NaN with empty string for readability
-merged[['Percentile', 'Percentile 2']] = merged[['Percentile', 'Percentile 2']].fillna('')
+# Step 6: Merge both datasets on Base Name + Branch + Category
+merged = pd.merge(df_24_grouped, df_23_grouped, on=group_cols, how='outer')
 
-# Step 7: Save result to CSV
+# Step 7: Optional — fill missing percentiles with "N/A"
+merged[['Percentile 24-25', 'Percentile 23-24']] = merged[['Percentile 24-25', 'Percentile 23-24']].fillna("")
+
+# Step 8: Rename base name to College Name
+merged = merged.rename(columns={'Base Name': 'College Name'})
+
+# Step 9: Save to file
 merged.to_csv("percentile.csv", index=False)
 
-print("✅ File saved: percentile.csv")
+print("✅ Saved as percentile.csv")
