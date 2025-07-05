@@ -207,3 +207,6 @@ function scrollToResults() {
     resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
+window.addEventListener("beforeunload", () => {
+  sessionStorage.removeItem("csvData");
+});
