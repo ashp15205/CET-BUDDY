@@ -87,7 +87,7 @@ function handleFormSubmit(e) {
   hideLoader();
 
   if (allColleges.length === 0) {
-    document.getElementById("results").innerHTML = "<h2>🎓 Eligible Colleges</h2><p>🚫 No colleges found matching your criteria.</p><p>Try changing or removing optional filters (category, branch, college name).</p>";
+    document.getElementById("results").innerHTML = "<h2>🎓 Eligible Colleges</h2><p>🚫 No colleges found matching your criteria.</p><p>Try changing CAP Rounds or removing optional filters (category, branch, college name).</p>";
     document.getElementById("results").style.display = "block";
     document.getElementById("download-pdf").style.display = "none";
     scrollToResults();
@@ -114,7 +114,6 @@ function renderTablePage(data, page, selectedRound = "Percentile") {
     <table id="college-table">
       <thead>
         <tr>
-          <th>College Code</th>
           <th>College Name</th>
           <th>Branch</th>
           <th>Category</th>
@@ -127,7 +126,6 @@ function renderTablePage(data, page, selectedRound = "Percentile") {
   paginatedData.forEach(college => {
     tableHTML += `
       <tr>
-        <td>${college["College Code"] || ""}</td>
         <td>${college["College Name"] || "N/A"}</td>
         <td>${college["Branch"] || "N/A"}</td>
         <td>${college["Category"] || "N/A"}</td>
@@ -173,9 +171,8 @@ function downloadPDF() {
   doc.setFontSize(16);
   doc.text("MHT-CET Eligible Colleges", 14, 20);
 
-  const headers = ["College Code", "College Name", "Branch", "Category", selectedRound === "Percentile" ? "Percentile (2024–25)" : "Percentile (2023–24)"];
+  const headers = ["College Name", "Branch", "Category", selectedRound === "Percentile" ? "Percentile (2024–25)" : "Percentile (2023–24)"];
   const rows = allColleges.map(row => [
-    row["College Code"] || "",
     row["College Name"] || "N/A",
     row["Branch"] || "N/A",
     row["Category"] || "N/A",
