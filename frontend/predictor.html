@@ -7,13 +7,14 @@
   <title>MHT-CET College Finder (B.E./B.Tech)</title>
 
   <!-- 🏫 Favicon with emoji using inline SVG -->
-  <link rel="icon"
-    href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'> <text y='0.9em' font-size='90'>🏫</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'> <text y='0.9em' font-size='90'>🏫</text></svg>" />
 
   <!-- SEO & Styling -->
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
 </head>
 
 <body>
@@ -27,7 +28,7 @@
       <h1>🔍 MHT-CET College Finder (B.E./B.Tech)</h1>
       <form id="predict-form">
         <label for="percentile">Enter Percentile <span class="required">*</span>:</label>
-        <input type="number" step="0.01" id="percentile" name="percentile" placeholder="Enter your Percentile"
+        <input type="number" step="0.01" min="0" max="100" id="percentile" name="percentile" placeholder="Enter your Percentile"
           required />
 
         <label for="category">Category <span class="required">*</span>:</label>
