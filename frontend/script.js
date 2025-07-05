@@ -156,15 +156,14 @@ function downloadPDF() {
   doc.setFontSize(16);
   doc.text("MHT-CET Eligible Colleges", 14, 20);
 
-  const headers = [];
-  document.querySelectorAll("thead th").forEach(th => headers.push(th.innerText));
-
-  const rows = [];
-  document.querySelectorAll("tbody tr").forEach(tr => {
-    const row = [];
-    tr.querySelectorAll("td").forEach(td => row.push(td.innerText));
-    rows.push(row);
-  });
+  const headers = ["College Code", "College Name", "Branch", "Category", "Percentile"];
+  const rows = allColleges.map(row => [
+    row["College Code"] || "",
+    row["College Name"] || "N/A",
+    row["Branch"] || "N/A",
+    row["Category"] || "N/A",
+    row["Percentile"] || "N/A"
+  ]);
 
   doc.autoTable({
     head: [headers],
