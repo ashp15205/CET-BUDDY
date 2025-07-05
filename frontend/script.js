@@ -12,6 +12,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Load and parse CSV
 async function loadCSVandPrepareDropdowns() {
+  if (sessionStorage.getItem("csvData")) {
+    fullData = JSON.parse(sessionStorage.getItem("csvData"));
+    populateDropdowns(fullData);
+    return;
+  }
   Papa.parse("percentile.csv", {
     download: true,
     header: true,
