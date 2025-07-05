@@ -212,6 +212,6 @@ function scrollToResults() {
     resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
-window.addEventListener("beforeunload", () => {
-  sessionStorage.removeItem("csvData");
-});
+function goToIndex() {
+  window.location.href = "index.html"; // no delay
+}
