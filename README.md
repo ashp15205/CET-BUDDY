@@ -1,45 +1,58 @@
 # 🏫 CET Buddy – MHT-CET College Predictor
 
-**CET Buddy** is a lightweight, browser-based tool that helps MHT-CET aspirants instantly find eligible engineering colleges in Maharashtra based on their percentile, category, branch, and college preferences.
+**CET Buddy** is a lightweight, browser-based tool that helps MHT-CET aspirants instantly find eligible engineering colleges in Maharashtra based on their **percentile**, **category**, **branch**, and **college preferences**.
 
-## 🌐 Live Demo:
+
+## 🌐 Live Demo
 
 [![Deploy with Vercel](https://vercel.com/button)](https://cet-buddy.vercel.app/)
 
 
 ## 🚀 Why CET Buddy?
 
-✅ **Instant Results**  
-✅ **Official Cutoff Data (CAP Round 1 - 2024–25)**  
-✅ **Clean UI, Dark Mode Friendly**  
-✅ **Mobile-First Design**  
-✅ **No Login, No Ads, 100% Free**
+✅ **Instant College Predictions** based on percentile  
+✅ **Official CAP Round 1 Cutoff Data (2023–24 & 2024–25)**  
+✅ **Fast, Minimal & Mobile-Friendly**  
+✅ **No Login, No Ads – 100% Free**  
+✅ **Download PDF of Your Results**  
+
 
 ## 🔍 Features
 
-- 🎯 Uses real **CAP Round 1 2024-25** cutoff data
-- 🔎 Filter by **percentile**, **category**, **branch**, or **college name**
-- 📊 Sorted output with pagination
-- 🖨️ Export your results as a **PDF**
-- ⚡ Built using **pure HTML, CSS, JavaScript + Python**
+- 🎯 CAP Round 1 Data: View college cutoffs for academic years <strong>2023–24</strong> and <strong>2024–25</strong>
+- 📊 Search colleges by **percentile**, with optional filters like **branch**, **category**, or **college name**
+- 🧾 View results in a paginated, responsive table
+- 📥 Download your eligible college list as a **PDF**
+- 💡 Built using **HTML, CSS, JavaScript**, and powered by **CSV data** (no backend required)
 
 ## 💡 How It Works
 
-1. **User Inputs:**
-   - Percentile (e.g., `96.45`)
-   - Category (e.g., `GOPENS`, `LOPENH`)
-   - Optional Branch or College preference
+1. **Input Details:**
+   - Your **MHT-CET Percentile**
+   - (Optional) **Category**, **College**, or **Branch**
+   - Choose CAP Round 1 cutoff of year: **2023–24** or **2024–25**
+     
+2. **Results Display:**
+   - A clean list of eligible colleges 
+   - Includes: **College Code, Name, Branch, Category, and Percentile**
+   - Results are sorted by percentile and paginated (10 per page)
+   - Click “Download PDF” to save your personalized list
 
-2. **Data Matching:**
-   - The app loads official cutoff data from a CSV file
-   - Filters out colleges where the cutoff percentile is below the input
-   - Matches optional branch or college name (case-insensitive)
-
-3. **Results:**
-   - List of eligible colleges sorted by percentile(descending order)
-   - Paginated for better readability(10 rows per page)
-   - Option to download results
+## ⚙️ TECH STACK: 
+<p align="left"><a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="60" height="60"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="60" height="60"/> </a>  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" > <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="60" height="60"/> </a> <a href="https://www.python.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="python" width="60" height="60"/> </a> </p>
 
 ---
-> **Disclaimer:** CET Buddy is an unofficial tool developed to assist students in exploring eligible colleges based on MHT-CET percentiles and CAP Round 1 cutoff data (2024–25). It is intended for informational purposes only. Actual cutoffs may vary, and users are advised to verify details from the official CET Cell Maharashtra website: [https://cetcell.mahacet.org](https://cetcell.mahacet.org).
 
+> ⚠️ Disclaimer:
+> CET Buddy is intended solely for educational and informational purposes.
+      The college eligibility results are based on publicly available CAP Round 1 cutoff data from the academic years
+      <strong>2023–24</strong> and <strong>2024–25</strong>. While every effort has been made to ensure accuracy,
+      some values may be incomplete or incorrect. Actual admission cutoffs may vary each year.
+      Users are strongly advised to verify all information independently through official sources before making any
+      decisions..
+
+
+####  <strong>Source: </strong><a href="https://cetcell.mahacet.org/" target="_blank">State CET Cell, Maharashtra</a>
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
