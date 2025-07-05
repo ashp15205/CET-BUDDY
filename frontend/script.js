@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("download-pdf").addEventListener("click", downloadPDF);
 });
 
-// Load CSV and populate dropdowns
+// Load and parse CSV
 async function loadCSVandPrepareDropdowns() {
-  Papa.parse("cutoff.csv", {
+  Papa.parse("percentile.csv", {
     download: true,
     header: true,
     complete: function(results) {
@@ -38,61 +38,76 @@ function populateSelect(selectEl, items, placeholder) {
     selectEl.appendChild(option);
   });
 }
-
-// Handle form
+// Form submission handler
 function handleFormSubmit(e) {
   e.preventDefault();
   showLoader();
+
   const form = new FormData(e.target);
   const payload = Object.fromEntries(form.entries());
-  payload.percentile = parseFloat(payload.percentile);
 
-  // ✅ Percentile validation
+  payload.percentile = parseFloat(payload.percentile);
+  const selectedRound = form.get("round") || "Percentile"; // CAP 2024–25 default
+
   if (isNaN(payload.percentile) || payload.percentile < 0 || payload.percentile > 100) {
     alert("❌ Please enter a valid percentile between 0 and 100.");
+    hideLoader();
     return;
   }
-  const percentile = parseFloat(form.get("percentile"));
-  const category = form.get("category");
-  const branch = form.get("branch");
-  const college = form.get("college");
 
-  let filtered = fullData.filter(row => {
-    return (
-      row["Category"]?.toUpperCase() === category.toUpperCase() &&
-      parseFloat(row["Percentile"]) <= percentile
+  // Filter only by percentile and round first
+  let filtered = fullData.filter(row =>
+    parseFloat(row[selectedRound]) <= payload.percentile
+  );
+
+  // Optional category
+  if (payload.category) {
+    filtered = filtered.filter(row =>
+      row["Category"]?.toUpperCase() === payload.category.toUpperCase()
     );
-  });
-
-  if (branch) {
-    filtered = filtered.filter(row => row["Branch"]?.toLowerCase().includes(branch.toLowerCase()));
   }
 
-  if (college) {
-    filtered = filtered.filter(row => row["College Name"]?.toLowerCase().includes(college.toLowerCase()));
+  // Optional branch
+  if (payload.branch) {
+    filtered = filtered.filter(row =>
+      row["Branch"]?.toLowerCase().includes(payload.branch.toLowerCase())
+    );
   }
 
-  allColleges = filtered.sort((a, b) => parseFloat(b["Percentile"]) - parseFloat(a["Percentile"]));
+  // Optional college
+  if (payload.college) {
+    filtered = filtered.filter(row =>
+      row["College Name"]?.toLowerCase().includes(payload.college.toLowerCase())
+    );
+  }
+
+  allColleges = filtered.sort((a, b) => parseFloat(b[selectedRound]) - parseFloat(a[selectedRound]));
   currentPage = 1;
 
   hideLoader();
 
   if (allColleges.length === 0) {
-    document.getElementById("results").innerHTML = "<h2>🎓 Eligible Colleges</h2><p>No matching colleges found.</p>";
+    document.getElementById("results").innerHTML = "<h2>🎓 Eligible Colleges</h2><p>🚫 No colleges found matching your criteria.</p><p>Try changing or removing optional filters (category, branch, college name).</p>";
     document.getElementById("results").style.display = "block";
     document.getElementById("download-pdf").style.display = "none";
+    scrollToResults();
     return;
   }
 
-  renderTablePage(allColleges, currentPage);
+  renderTablePage(allColleges, currentPage, selectedRound);
   document.getElementById("results").style.display = "block";
   document.getElementById("download-pdf").style.display = "inline-block";
+
+  // Scroll to results
+  document.getElementById("results").scrollIntoView({ behavior: "smooth" });
 }
 
-function renderTablePage(data, page) {
+function renderTablePage(data, page, selectedRound = "Percentile") {
   const start = (page - 1) * rowsPerPage;
   const end = start + rowsPerPage;
   const paginatedData = data.slice(start, end);
+
+  const roundLabel = selectedRound === "Percentile" ? "Percentile (2024–25)" : "Percentile (2023–24)";
 
   let tableHTML = `
     <h2>🎓 Eligible Colleges</h2>
@@ -103,7 +118,7 @@ function renderTablePage(data, page) {
           <th>College Name</th>
           <th>Branch</th>
           <th>Category</th>
-          <th>Percentile</th>
+          <th>${roundLabel}</th>
         </tr>
       </thead>
       <tbody>
@@ -116,7 +131,7 @@ function renderTablePage(data, page) {
         <td>${college["College Name"] || "N/A"}</td>
         <td>${college["Branch"] || "N/A"}</td>
         <td>${college["Category"] || "N/A"}</td>
-        <td>${college["Percentile"] || "N/A"}</td>
+        <td>${college[selectedRound] || "N/A"}</td>
       </tr>
     `;
   });
@@ -125,9 +140,9 @@ function renderTablePage(data, page) {
       </tbody>
     </table>
     <div class="pagination">
-      <button id="prev-page" ${page === 1 ? 'disabled' : ''}>⬅️ Previous</button>
+      <button id="prev-page" ${page === 1 ? 'disabled' : ''}>⬅️</button>
       <span>Page ${page} of ${Math.ceil(data.length / rowsPerPage)}</span>
-      <button id="next-page" ${end >= data.length ? 'disabled' : ''}>Next ➡️</button>
+      <button id="next-page" ${end >= data.length ? 'disabled' : ''}>➡️</button>
     </div>
   `;
 
@@ -136,33 +151,35 @@ function renderTablePage(data, page) {
   document.getElementById("prev-page").onclick = () => {
     if (currentPage > 1) {
       currentPage--;
-      renderTablePage(allColleges, currentPage);
+      renderTablePage(allColleges, currentPage, selectedRound);
     }
   };
 
   document.getElementById("next-page").onclick = () => {
     if (currentPage * rowsPerPage < allColleges.length) {
       currentPage++;
-      renderTablePage(allColleges, currentPage);
+      renderTablePage(allColleges, currentPage, selectedRound);
     }
   };
 }
 
-// PDF download
+
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
+  const selectedRound = document.getElementById("round")?.value || "Percentile";
+
   doc.setFontSize(16);
   doc.text("MHT-CET Eligible Colleges", 14, 20);
 
-  const headers = ["College Code", "College Name", "Branch", "Category", "Percentile"];
+  const headers = ["College Code", "College Name", "Branch", "Category", selectedRound === "Percentile" ? "Percentile (2024–25)" : "Percentile (2023–24)"];
   const rows = allColleges.map(row => [
     row["College Code"] || "",
     row["College Name"] || "N/A",
     row["Branch"] || "N/A",
     row["Category"] || "N/A",
-    row["Percentile"] || "N/A"
+    row[selectedRound] || "N/A"
   ]);
 
   doc.autoTable({
@@ -182,7 +199,14 @@ function showLoader() {
   const loader = document.getElementById("loader");
   if (loader) loader.style.display = "flex";
 }
+
 function hideLoader() {
   const loader = document.getElementById("loader");
   if (loader) loader.style.display = "none";
+}
+function scrollToResults() {
+  const resultsSection = document.getElementById("results");
+  if (resultsSection) {
+    resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }

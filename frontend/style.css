@@ -91,6 +91,7 @@ select {
   color: var(--text-light);
   width: 100%;
   box-sizing: border-box;
+  margin: 2.5px;
 }
 
 select {
@@ -100,6 +101,9 @@ select {
   background-position: right 1rem center;
   background-size: 1rem;
   cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
 }
 
 input:focus,
