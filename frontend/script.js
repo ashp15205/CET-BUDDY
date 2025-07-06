@@ -215,3 +215,13 @@ function scrollToResults() {
 function goToIndex() {
   window.history.back();  // goes back faster without reloading 
 }
+
+function goToHome() {
+  // Try to use the History API for smoother navigation
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    // Fallback to regular navigation (avoids infinite loader)
+    window.location.href = "index.html";
+  }
+}

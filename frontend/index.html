@@ -117,7 +117,12 @@
       loader.style.display = "flex";
       window.location.href = "predictor.html"; // Remove delay
     }
-
+    // Hide loader if returning from predictor via cache
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    document.getElementById("page-loader").style.display = "none";
+  }
+});
   </script>
 </body>
 
