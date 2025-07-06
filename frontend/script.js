@@ -213,5 +213,5 @@ function scrollToResults() {
   }
 }
 function goToIndex() {
-  window.location.href = "index.html"; // no delay
+  window.history.back();  // goes back faster without reloading 
 }
