@@ -218,7 +218,13 @@ function hideLoader() {
   const loader = document.getElementById("loader");
   if (loader) loader.style.display = "none";
 }
-
+function goToHome() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = "index.html";
+  }
+}
 function scrollToResults() {
   const resultsSection = document.getElementById("results");
   if (resultsSection) {
