@@ -239,7 +239,23 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+.feedback-btn {
+  display: inline-block;
+  background-color: #6d02f9;
+  color: white;
+  font-weight: 700;
+  padding: 12px 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 4px 12px rgb(74, 91, 250);
+}
 
+.feedback-btn:hover {
+  background: linear-gradient(135deg, #5339ff, #a991ff);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgb(76, 127, 255);
+}
 
 /* Mobile Responsive */
 @media (max-width: 600px) {
