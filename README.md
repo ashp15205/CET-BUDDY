@@ -1,4 +1,4 @@
-# 🏫 CET Buddy – MHT-CET College Predictor
+# 🏫 CET Buddy : MHT-CET College Predictor
 
 **CET Buddy** is a lightweight, browser-based tool that helps MHT-CET aspirants instantly find eligible engineering colleges in Maharashtra based on their **percentile**, **category**, **branch**, and **college preferences**.
 
