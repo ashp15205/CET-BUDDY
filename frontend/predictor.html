@@ -4,95 +4,164 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MHT-CET College Finder (B.E./B.Tech)</title>
+  <title>MHT CET College Predictor 2025-26 | CAP Round 1 Engineering Cutoff Finder</title>
 
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" type="image/png" />
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230f62fe'/%3E%3Cpath d='M10 24 32 14l22 10v4L32 38 10 28v-4Z' fill='white'/%3E%3Crect x='16' y='30' width='6' height='16' rx='1.5' fill='white'/%3E%3Crect x='29' y='30' width='6' height='16' rx='1.5' fill='white'/%3E%3Crect x='42' y='30' width='6' height='16' rx='1.5' fill='white'/%3E%3Crect x='13' y='46' width='38' height='4' rx='2' fill='white'/%3E%3C/svg%3E" />
+  <meta name="description"
+    content="Use CET Buddy to find eligible Maharashtra engineering colleges with MHT CET percentile, category, branch, and college filters using CAP Round 1 cutoff data for 2025-26, 2024-25, and 2023-24.">
+  <meta name="keywords"
+    content="College Predictor, MHT CET college predictor, MHT CET college predictor 2025-26, CAP Round 1 cutoff Maharashtra, engineering college predictor Maharashtra, MHT CET percentile college finder, BTech admission Maharashtra, MHT CET cutoff by category, MHT CET cutoff by branch">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:title" content="MHT CET College Predictor 2025-26 | CET Buddy">
+  <meta property="og:description"
+    content="Check eligible B.E. and B.Tech colleges in Maharashtra with percentile, category, branch, and college filters using CAP Round 1 cutoff data.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X17T730JNF"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-X17T730JNF');
+    gtag("js", new Date());
+    gtag("config", "G-X17T730JNF");
   </script>
 
   <link rel="prefetch" href="index.html" as="document">
   <link rel="prefetch" href="index.css" as="style">
-
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&family=Urbanist:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
   <header class="main-header">
-    <div class="logo">🏫 CET Buddy</div>
+    <a class="brand" href="index.html" aria-label="CET Buddy home">
+      <span class="brand-icon"><i class="fa-solid fa-building-columns"></i></span>
+      <span class="brand-text">CET Buddy</span>
+    </a>
+
+    <nav class="header-nav">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="cta-link" href="index.html#about">About</a>
+    </nav>
   </header>
 
-  <main class="page">
-    <!-- 🧾 Form Container -->
-    <section class="container">
-      <h1>🔍 MHT-CET College Finder (B.E./B.Tech)</h1>
-      <form id="predict-form">
-        <label for="percentile">Enter Percentile<span class="required">*</span> :</label>
-        <input type="number" step="0.01" min="0" max="100" id="percentile" name="percentile"
-          placeholder="Enter your Percentile" required />
-
-        <label for="round">CAP Round<span class="required">*</span> :</label>
-        <select id="round" name="round" required>
-          <option value="2024">CAP Round 1 (2024–25)</option>
-          <option value="2023">CAP Round 1 (2023–24)</option>
-        </select>
-
-        <label for="college">College:</label>
-        <select id="college" name="college"></select>
-
-        <label for="branch">Branch:</label>
-        <select id="branch" name="branch"></select>
-
-        <label for="category">Category:</label>
-        <select id="category" name="category"></select>
-
-        <div class="button-wrapper">
-          <button type="submit">Find Colleges</button>
-        </div>
-      </form>
+  <main class="predictor-shell">
+    <section class="predictor-hero reveal reveal-1">
+      <div class="predictor-copy">
+        <h1>MHT-CET College Predictor</h1>
+        <p class="intro">
+          Enter your percentile, select the CAP year, and refine the shortlist with crisp filters and a cleaner
+          experience built for fast decision-making.
+        </p>
+      </div>
+      <div class="predictor-hero-badge">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>CAP Round 1 • 2023-24 to 2025-26</span>
+      </div>
     </section>
 
-    <!-- 🔍 Results Section -->
-    <section class="results-section" id="results" style="display: none;"></section>
+    <section class="predictor-grid">
+      <section class="container reveal reveal-2">
+        <div class="card-head">
+          <div>
+            <p class="section-kicker">Prediction inputs</p>
+          </div>
+          <div class="mini-chip">
+            <i class="fa-solid fa-shield-heart"></i>
+            <span>No signup</span>
+          </div>
+        </div>
 
-    <!-- 📥 Download Button -->
-    <div style="text-align: center; margin: 30px 0 40px;">
+        <form id="predict-form">
+          <div class="field">
+            <label for="percentile">Enter Percentile<span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-chart-line"></i>
+              <input type="number" step="0.01" min="0" max="100" id="percentile" name="percentile"
+                placeholder="Enter your percentile" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="round">CAP Round<span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-calendar-days"></i>
+              <select id="round" name="round" required>
+                <option value="2025">CAP Round 1 (2025-26)</option>
+                <option value="2024">CAP Round 1 (2024-25)</option>
+                <option value="2023">CAP Round 1 (2023-24)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="college">College</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-building-columns"></i>
+              <select id="college" name="college"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="branch">Branch</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-microchip"></i>
+              <select id="branch" name="branch"></select>
+            </div>
+          </div>
+
+          <div class="field field-full">
+            <label for="category">Category</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-layer-group"></i>
+              <select id="category" name="category"></select>
+            </div>
+          </div>
+
+          <div class="button-wrapper">
+            <button type="submit" class="primary-button">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              Find Colleges
+            </button>
+          </div>
+        </form>
+      </section>
+    </section>
+
+    <section class="results-section reveal reveal-4" id="results" style="display: none;"></section>
+
+    <div class="actions-row reveal reveal-4">
       <button id="download-pdf" style="display: none;">
-        <i class="fas fa-download"></i> Download Results
+        <i class="fa-solid fa-download"></i>
+        Download Results
       </button>
 
-      <div style="text-align: center; margin: 20px 0;">
-        <button onclick="goToHome()" style="background: #f0f0f0; color: #333;">
-          <i class="fas fa-home"></i> Back to Home
-        </button>
-      </div>
+      <button onclick="goToHome()" class="secondary-btn">
+        <i class="fa-solid fa-house"></i>
+        Back to Home
+      </button>
 
-      <div class="button-wrapper" style="text-align: center; margin-top: 20px;">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSexA22rVtQVe20dwX8YqQ1QwFJUGRZ18Y6ATTy4qVCeeb_ZIw/viewform?usp=sharing&ouid=113934088645161498212"
-          target="_blank" class="feedback-btn">
-          📝 Feedback Form
-        </a>
-      </div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSexA22rVtQVe20dwX8YqQ1QwFJUGRZ18Y6ATTy4qVCeeb_ZIw/viewform?usp=sharing&ouid=113934088645161498212"
+        target="_blank" class="feedback-btn">
+        <i class="fa-regular fa-message"></i>
+        Feedback Form
+      </a>
     </div>
-
   </main>
 
-
-  <!-- 🔄 Loader -->
   <div id="loader" class="loader-overlay" style="display: none;">
     <div class="spinner"></div>
   </div>
 
-  <!-- 🔁 Script -->
   <script src="./script.js"></script>
 </body>
 

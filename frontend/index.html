@@ -4,139 +4,295 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CET Buddy – MHT CET College Predictor 2025 (B.E./B.Tech)</title>
+  <title>CET Buddy - MHT CET College Predictor 2025 (B.E./B.Tech)</title>
   <link rel="icon"
-    href="data:image/svg+xml, <svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230f62fe'/%3E%3Cpath d='M10 24 32 14l22 10v4L32 38 10 28v-4Z' fill='white'/%3E%3Crect x='16' y='30' width='6' height='16' rx='1.5' fill='white'/%3E%3Crect x='29' y='30' width='6' height='16' rx='1.5' fill='white'/%3E%3Crect x='42' y='30' width='6' height='16' rx='1.5' fill='white'/%3E%3Crect x='13' y='46' width='38' height='4' rx='2' fill='white'/%3E%3C/svg%3E">
 
-  <meta name="description" content="CETBuddy helps you explore B.E./B.Tech colleges in Maharashtra using your MHT CET percentile. Discover eligible colleges and make informed decisions for 2025.">
-
+  <meta name="description"
+    content="CET Buddy is an MHT CET college predictor for Maharashtra engineering admissions. Explore CAP Round 1 cutoff based B.E. and B.Tech colleges by percentile, branch, category, and college for 2025-26, 2024-25, and 2023-24.">
   <meta name="keywords"
-    content="CET Buddy, MHT CET, MHT CET College Predictor, College Predictor, Engineering, College Finder, B.E., B.Tech, Maharashtra, Cutoff, CAP Round, CET college list">
+    content="College Predictor, MHT CET college predictor, MHT CET college predictor 2025-26, CET Buddy, Maharashtra engineering colleges, CAP Round 1 cutoff, MHT CET cutoff 2025, MHT CET cutoff 2025-26, MHT CET college finder, BTech college predictor Maharashtra, engineering admission Maharashtra, percentile based college predictor, MHT CET branch cutoff, MHT CET category cutoff">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:title" content="CET Buddy - MHT CET College Predictor for Maharashtra Engineering Admissions">
+  <meta property="og:description"
+    content="Find eligible B.E. and B.Tech colleges in Maharashtra using MHT CET percentile, branch, category, and CAP Round 1 cutoff data.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <meta http-equiv="Cache-Control" content="max-age=3600, must-revalidate" />
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-X17T730JNF"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-X17T730JNF');
+    gtag("js", new Date());
+    gtag("config", "G-X17T730JNF");
   </script>
 
   <link rel="stylesheet" href="./index.css" />
-  <!-- Include Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700;800&family=Urbanist:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
-  <header class="main-header">
-    <div class="logo">🏫 CET Buddy</div>
-  </header>
-
-  <div class="hero">
-    <div class="container homepage">
-      <h1>👋 Welcome to <span style="color:#4c7fff;">CET Buddy</span></h1>
-      <p class="tagline">Instantly find eligible engineering colleges in Maharashtra based on your percentile.</p>
-
-      <section>
-        <h2>🎓 What is CETBuddy?</h2>
-        <p>
-          <strong>CETBuddy</strong> is your assistant for exploring <strong>B.E./B.Tech colleges</strong> in Maharashtra
-          using your <strong>MHT CET percentile</strong>.
-          Just enter your percentile and filter by category, branch, or college to get a customized list based on
-          official CAP Round 1 cutoff data.
-        </p>
-      </section>
-
-      <section>
-        <h2>🙌 Why CETBuddy?</h2>
-        <ul>
-          <li><strong>Quick & Easy:</strong> Instantly find eligible engineering colleges based on your percentile.</li>
-          <li><strong>Zero Signup:</strong> No login, no ads, no data tracking — 100% free to use.</li>
-          <li><strong>PDF Export:</strong> Download your personalized colleges list with a single click.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>📝 What You Need</h2>
-        <ol>
-          <li>Your MHT CET Percentile (e.g. 96.45)</li>
-          <li>Your Category (e.g. GOPENS, LOPENH)</li>
-          <li>Preferred College or Branch (optional)</li>
-        </ol>
-      </section>
-
-      <div class="button-wrapper">
-        <button class="start-btn" onclick="navigateToPredictor()">
-          <i class="fas fa-search"></i> Start Now
-        </button>
+  <div class="intro-screen" id="intro-screen" aria-hidden="true">
+    <div class="intro-orb intro-orb-left"></div>
+    <div class="intro-orb intro-orb-right"></div>
+    <div class="intro-grid intro-grid-top"></div>
+    <div class="intro-grid intro-grid-bottom"></div>
+    <div class="intro-mark" role="presentation">
+      <div class="intro-build">
+        <span class="intro-rail intro-rail-left"></span>
+        <div class="intro-logo-shell">
+          <span class="intro-crest-ring"></span>
+          <span class="intro-crest-glow"></span>
+          <span class="brand-icon intro-brand-icon"><i class="fa-solid fa-building-columns"></i></span>
+          <span class="intro-crest-base"></span>
+        </div>
+        <span class="intro-rail intro-rail-right"></span>
+      </div>
+      <div class="intro-copy">
+        <p class="intro-label">Institution crafted guidance</p>
+        <p class="intro-title">CET Buddy</p>
+        <p class="intro-subtitle">MHT CET College Predictor</p>
+      </div>
+      <div class="intro-line">
+        <span></span>
       </div>
     </div>
   </div>
 
+  <header class="main-header">
+    <a class="brand" href="index.html" aria-label="CET Buddy home">
+      <span class="brand-icon"><i class="fa-solid fa-building-columns"></i></span>
+      <span class="brand-text">CET Buddy</span>
+    </a>
+
+    <nav class="header-nav">
+      <a class="nav-link" href="#about">About</a>
+      <a class="cta-link" href="predictor.html">Open Predictor</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-shell">
+      <div class="hero-backdrop hero-backdrop-left"></div>
+      <div class="hero-backdrop hero-backdrop-right"></div>
+
+      <div class="hero-content reveal reveal-1">
+        <h1>Where Your CET Score Meets the Right College</h1>
+        <p class="hero-copy">
+          Explore eligible B.E. and B.Tech colleges in Maharashtra using your percentile, category, branch, and
+          college preferences with an interface designed to feel polished, calm, and effortless.
+        </p>
+
+        <div class="hero-actions">
+          <button class="primary-button hero-primary" onclick="navigateToPredictor()">
+            <i class="fa-solid fa-arrow-right"></i>
+            Start Exploring
+          </button>
+        </div>
+
+        <div class="hero-metrics">
+          <article class="metric-card reveal reveal-2">
+            <i class="fa-solid fa-layer-group"></i>
+            <strong>Last 3 Years Data</strong>
+            <span>CAP Round 1 data from 2023 to 2025</span>
+          </article>
+          <article class="metric-card reveal reveal-3">
+            <i class="fa-solid fa-sliders"></i>
+            <strong>Precision Filters</strong>
+            <span>Refine results by branch, category, and college</span>
+          </article>
+          <article class="metric-card reveal reveal-4">
+            <i class="fa-regular fa-file-pdf"></i>
+            <strong>Export Ready</strong>
+            <span>Download a polished list of your eligible colleges</span>
+          </article>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal reveal-4">
+        <div class="device-frame">
+          <div class="device-topbar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="device-screen">
+            <div class="screen-pill">
+              <i class="fa-solid fa-building-columns"></i>
+              Quick prediction form
+            </div>
+            <form class="screen-form" id="hero-predict-form">
+              <div class="mock-field">
+                <label class="mock-label" for="hero-percentile">Percentile</label>
+                <div class="mock-input">
+                  <i class="fa-solid fa-chart-line"></i>
+                  <input id="hero-percentile" name="percentile" type="number" step="0.01" min="0" max="100"
+                    placeholder="Enter your percentile" required />
+                </div>
+              </div>
+
+              <div class="mock-field">
+                <label class="mock-label" for="hero-round">CAP Round</label>
+                <div class="mock-input">
+                  <i class="fa-solid fa-calendar-days"></i>
+                  <select id="hero-round" name="round" required>
+                    <option value="2025">CAP Round 1 (2025-26)</option>
+                    <option value="2024">CAP Round 1 (2024-25)</option>
+                    <option value="2023">CAP Round 1 (2023-24)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="screen-submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Find Colleges
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-section" id="features">
+      <div class="section-head reveal reveal-1">
+        <p class="section-kicker">Built for focus</p>
+        <h2>Everything arranged to help you decide faster.</h2>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-panel reveal reveal-2">
+          <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+          <h3>Instant shortlisting</h3>
+          <p>Enter your percentile and get a clean, ranked list of colleges without unnecessary clutter.</p>
+        </article>
+        <article class="feature-panel reveal reveal-3">
+          <div class="feature-icon"><i class="fa-solid fa-filter-circle-xmark"></i></div>
+          <h3>Smart filtering</h3>
+          <p>Zoom into the exact college, branch, and category combinations you want to compare.</p>
+        </article>
+        <article class="feature-panel reveal reveal-4">
+          <div class="feature-icon"><i class="fa-regular fa-file-lines"></i></div>
+          <h3>Clean export flow</h3>
+          <p>Generate a PDF that is easy to save, share, and review during counselling decisions.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="story-section" id="about">
+      <article class="story-card story-card-primary reveal reveal-2">
+        <p class="section-kicker">About</p>
+        <h2>A college prediction tool for MHT CET students.</h2>
+        <p>
+          CET Buddy is built to make Maharashtra engineering admissions easier to understand. It brings official CAP
+          Round 1 cutoff data into one focused experience so students can quickly check likely colleges for B.E. and
+          B.Tech programs.
+        </p>
+        <p>
+          Instead of scanning multiple PDFs and cutoff tables manually, you can enter your percentile and narrow the
+          list by branch, category, and college preference to get a shortlist that feels easier to compare.
+        </p>
+      </article>
+
+      <article class="story-card reveal reveal-3">
+        <p class="section-kicker">Why students use it</p>
+        <ul class="story-list">
+          <li><i class="fa-solid fa-check"></i><span>No signup or unnecessary setup before exploring colleges.</span></li>
+          <li><i class="fa-solid fa-check"></i><span>Easy filtering by percentile, branch, category, and college name.</span></li>
+          <li><i class="fa-solid fa-check"></i><span>Comfortable to use on phone screens during counselling and comparisons.</span></li>
+          <li><i class="fa-solid fa-check"></i><span>PDF export helps save a shortlist for later review with family or mentors.</span></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
   <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3>CET Buddy</h3>
+        <p class="footer-copy">
+          Built to make MHT CET college exploration feel simpler, calmer, and more trustworthy.
+        </p>
+      </div>
+      <div>
+        <h4>Source</h4>
+        <p class="footer-copy">State CET Cell, Maharashtra</p>
+      </div>
+      <div>
+        <h4>Built by</h4>
+        <p class="footer-copy">
+          Ashish Patil
+          <a href="https://www.linkedin.com/in/ashish-patil-915363289/" target="_blank" class="linkedin-link"
+            title="Ashish Patil on LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+        </p>
+      </div>
+    </div>
     <p class="disclaimer">
-      ⚠️ <strong>Disclaimer:</strong> CET Buddy is intended solely for informational and educational purposes.
-      The cutoff data provided is compiled from publicly available sources, primarily the official CET Cell, Maharashtra
-      website.
-      While we strive to ensure accuracy and completeness, some information may be outdated, incomplete, or subject to
-      change.
-      Actual admission cutoffs may vary each year.
-      Users are strongly advised to verify all details through official sources before making any academic or
-      admission-related decisions.
+      Disclaimer: CET Buddy is for guidance only. Cutoff data may change, so please confirm colleges, categories, and
+      admission details on the official State CET Cell website before making final decisions.
     </p>
-
-
-
-    <strong>Source: </strong> State CET Cell, Maharashtra
-    <p class="credits">
-      🧑‍💻 Built by <strong>Ashish Patil</strong> <span>|</span>
-      <a href="https://www.linkedin.com/in/ashish-patil-915363289/" target="_blank" class="linkedin-link"
-        title="Ashish Patil on LinkedIn">
-        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" />
-      </a>
-    </p>
-
-    </p>
-
   </footer>
 
-  <!-- Loader -->
-  <div id="page-loader" style="
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.75);
-    z-index: 9999;
-    color: white;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    font-family: sans-serif;
-  ">
+  <div id="page-loader" class="page-loader" style="display: none;">
     <div class="loader-spinner"></div>
   </div>
 
   <script>
-    // In index.html
+    const HERO_PREDICTOR_STORAGE_KEY = "cetBuddyPredictorSession";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const introScreen = document.getElementById("intro-screen");
+
+      if (!introScreen) return;
+
+      document.body.classList.add("intro-active");
+
+      window.setTimeout(() => {
+        introScreen.classList.add("intro-screen-hide");
+      }, 2650);
+
+      window.setTimeout(() => {
+        document.body.classList.remove("intro-active");
+        introScreen.remove();
+      }, 3400);
+    });
+
     function navigateToPredictor() {
       const loader = document.getElementById("page-loader");
       loader.style.display = "flex";
-      window.location.href = "predictor.html"; // Remove delay
+      window.location.href = "predictor.html";
     }
-    // Hide loader if returning from predictor via cache
-    window.addEventListener('pageshow', (event) => {
+
+    document.getElementById("hero-predict-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const form = new FormData(event.currentTarget);
+      const payload = {
+        percentile: form.get("percentile")?.toString().trim() || "",
+        round: form.get("round")?.toString().trim() || "2025",
+        branch: form.get("branch")?.toString().trim() || "",
+        college: form.get("college")?.toString().trim() || "",
+        category: form.get("category")?.toString().trim() || "",
+        autoSubmit: true
+      };
+
+      sessionStorage.setItem(HERO_PREDICTOR_STORAGE_KEY, JSON.stringify(payload));
+      navigateToPredictor();
+    });
+
+    window.addEventListener("pageshow", (event) => {
       if (event.persisted) {
         document.getElementById("page-loader").style.display = "none";
       }
     });
   </script>
-
 </body>
 
 </html>

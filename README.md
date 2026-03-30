@@ -11,7 +11,7 @@
 ## 🚀 Why CET Buddy?
 
 ✅ **Instant College Predictions** based on percentile  
-✅ **Official CAP Round 1 Cutoff Data (2023–24 & 2024–25)**  
+✅ **Official CAP Round 1 Cutoff Data (2023-24, 2024-25, 2025-26)**  
 ✅ **Fast, Minimal & Mobile-Friendly**  
 ✅ **No Login, No Ads – 100% Free**  
 ✅ **Download PDF of Your Results**  
@@ -19,7 +19,7 @@
 
 ## 🔍 Features
 
-- 🎯 CAP Round 1 Data: View college cutoffs for academic years <strong>2023–24</strong> and <strong>2024–25</strong>
+- 🎯 CAP Round 1 Data: View college cutoffs for academic years <strong>2023-24</strong>, <strong>2024-25</strong>, and <strong>2025-26</strong>
 - 📊 Search colleges by **percentile**, with optional filters like **branch**, **category**, or **college name**
 - 🧾 View results in a paginated, responsive table
 - 📥 Download your eligible college list as a **PDF**
@@ -30,7 +30,7 @@
 1. **Input Details:**
    - Your **MHT-CET Percentile**
    - (Optional) **Category**, **College**, or **Branch**
-   - Choose CAP Round 1 cutoff of year: **2023–24** or **2024–25**
+   - Choose CAP Round 1 cutoff year: **2025-26**, **2024-25**, or **2023-24**
      
 2. **Results Display:**
    - A clean list of eligible colleges 
@@ -46,7 +46,7 @@
 > ⚠️ Disclaimer:
 > CET Buddy is intended solely for educational and informational purposes.
       The college eligibility results are based on publicly available CAP Round 1 cutoff data from the academic years
-      <strong>2023–24</strong> and <strong>2024–25</strong>. While every effort has been made to ensure accuracy,
+      <strong>2023-24</strong>, <strong>2024-25</strong>, and <strong>2025-26</strong>. While every effort has been made to ensure accuracy,
       some values may be incomplete or incorrect. Actual admission cutoffs may vary each year.
       Users are strongly advised to verify all information independently through official sources before making any
       decisions..

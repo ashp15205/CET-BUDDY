@@ -2,6 +2,16 @@ let allColleges = [];
 let fullData = [];
 let currentPage = 1;
 const rowsPerPage = 10;
+const PREDICTOR_STORAGE_KEY = "cetBuddyPredictorSession";
+const ROUND_CONFIG = {
+  "2025": { file: "cutoff-25-26.csv", label: "2025-26" },
+  "2024": { file: "cutoff-24-25.csv", label: "2024-25" },
+  "2023": { file: "cutoff-23-24.csv", label: "2023-24" }
+};
+
+function getRoundConfig(roundValue) {
+  return ROUND_CONFIG[roundValue] || ROUND_CONFIG["2025"];
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadCSVandPrepareDropdowns();
@@ -9,31 +19,71 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("predict-form").addEventListener("submit", handleFormSubmit);
   document.getElementById("download-pdf").addEventListener("click", downloadPDF);
   document.getElementById("round").addEventListener("change", async () => {
-    await loadCSVandPrepareDropdowns(); // reload data on round change
+    await loadCSVandPrepareDropdowns();
   });
+
+  await restoreSessionInputs();
 });
 
-// Load CSV based on selected round
+async function restoreSessionInputs() {
+  const raw = sessionStorage.getItem(PREDICTOR_STORAGE_KEY);
+  if (!raw) return;
+
+  let savedState;
+  try {
+    savedState = JSON.parse(raw);
+  } catch (error) {
+    sessionStorage.removeItem(PREDICTOR_STORAGE_KEY);
+    return;
+  }
+
+  const form = document.getElementById("predict-form");
+  if (!form) return;
+
+  const roundSelect = document.getElementById("round");
+  if (savedState.round && roundSelect && roundSelect.value !== savedState.round) {
+    roundSelect.value = savedState.round;
+    await loadCSVandPrepareDropdowns();
+  }
+
+  const fields = ["percentile", "round", "branch", "category", "college"];
+  fields.forEach((field) => {
+    const element = document.getElementById(field);
+    const value = savedState[field];
+    if (element && typeof value === "string" && value) {
+      const hasOption = element.tagName !== "SELECT" || [...element.options].some((option) => option.value === value);
+      if (hasOption) {
+        element.value = value;
+      }
+    }
+  });
+
+  if (savedState.autoSubmit && document.getElementById("percentile")?.value) {
+    sessionStorage.setItem(PREDICTOR_STORAGE_KEY, JSON.stringify({ ...savedState, autoSubmit: false }));
+    form.requestSubmit();
+  }
+}
+
 async function loadCSVandPrepareDropdowns() {
-  const selectedRound = document.getElementById("round")?.value || "2024";
-  const file = selectedRound === "2023" ? "cutoff-23-24.csv" : "cutoff-24-25.csv";
+  const selectedRound = document.getElementById("round")?.value || "2025";
+  const { file } = getRoundConfig(selectedRound);
 
   return new Promise((resolve) => {
     Papa.parse(file, {
       download: true,
       header: true,
-      complete: function (results) {
-        fullData = results.data.filter(row => row["Percentile"]);
+      complete(results) {
+        fullData = results.data.filter((row) => row["Percentile"]);
 
         const excludedCategories = ["S", "H", "MI", "PWDROBC.1"];
-const categories = [...new Set(
-  fullData
-    .map(d => d["Category"])
-    .filter(cat => cat && !excludedCategories.includes(cat.trim()))
-)].sort();
+        const categories = [...new Set(
+          fullData
+            .map((d) => d["Category"])
+            .filter((cat) => cat && !excludedCategories.includes(cat.trim()))
+        )].sort();
 
-        const branches = [...new Set(fullData.map(d => d["Branch"]).filter(Boolean))].sort();
-        const colleges = [...new Set(fullData.map(d => d["College Name"]).filter(Boolean))].sort();
+        const branches = [...new Set(fullData.map((d) => d["Branch"]).filter(Boolean))].sort();
+        const colleges = [...new Set(fullData.map((d) => d["College Name"]).filter(Boolean))].sort();
 
         populateSelect(document.getElementById("category"), categories, "Select Category");
         populateSelect(document.getElementById("branch"), branches, "Select Branch");
@@ -47,7 +97,7 @@ const categories = [...new Set(
 
 function populateSelect(selectEl, items, placeholder) {
   selectEl.innerHTML = `<option value="">${placeholder}</option>`;
-  items.forEach(item => {
+  items.forEach((item) => {
     const option = document.createElement("option");
     option.value = item;
     option.textContent = item;
@@ -55,43 +105,43 @@ function populateSelect(selectEl, items, placeholder) {
   });
 }
 
-function handleFormSubmit(e) {
-  e.preventDefault();
+function handleFormSubmit(event) {
+  event.preventDefault();
   showLoader();
 
-  const form = new FormData(e.target);
+  const form = new FormData(event.target);
   const payload = Object.fromEntries(form.entries());
+  sessionStorage.setItem(PREDICTOR_STORAGE_KEY, JSON.stringify({ ...payload, autoSubmit: false }));
 
   const percentile = parseFloat(payload.percentile);
   const roundYear = payload.round;
-  const roundLabel = roundYear === "2023" ? "2023–24" : "2024–25";
+  const { label: roundLabel } = getRoundConfig(roundYear);
 
   if (isNaN(percentile) || percentile < 0 || percentile > 100) {
-    alert("❌ Please enter a valid percentile between 0 and 100.");
+    alert("Please enter a valid percentile between 0 and 100.");
     hideLoader();
     return;
   }
 
-  // Filter valid percentiles
-  let filtered = fullData.filter(row => {
-    const p = parseFloat(row["Percentile"]);
-    return !isNaN(p) && p !== -1.0 && p <= percentile;
+  let filtered = fullData.filter((row) => {
+    const value = parseFloat(row["Percentile"]);
+    return !isNaN(value) && value !== -1.0 && value <= percentile;
   });
 
   if (payload.category) {
-    filtered = filtered.filter(row =>
+    filtered = filtered.filter((row) =>
       row["Category"]?.toUpperCase() === payload.category.toUpperCase()
     );
   }
 
   if (payload.branch) {
-    filtered = filtered.filter(row =>
+    filtered = filtered.filter((row) =>
       row["Branch"]?.toLowerCase().includes(payload.branch.toLowerCase())
     );
   }
 
   if (payload.college) {
-    filtered = filtered.filter(row =>
+    filtered = filtered.filter((row) =>
       row["College Name"]?.toLowerCase().includes(payload.college.toLowerCase())
     );
   }
@@ -106,7 +156,7 @@ function handleFormSubmit(e) {
   const resultsDiv = document.getElementById("results");
 
   if (allColleges.length === 0) {
-    resultsDiv.innerHTML = `<h2>🎓 Eligible Colleges</h2><p>🚫 No colleges found for CAP Round ${roundLabel}.<br>Try changing filters or round.</p>`;
+    resultsDiv.innerHTML = `<h2>Eligible Colleges</h2><p>No colleges found for CAP Round ${roundLabel}.<br>Try changing filters or round.</p>`;
     resultsDiv.style.display = "block";
     document.getElementById("download-pdf").style.display = "none";
     scrollToResults();
@@ -115,7 +165,7 @@ function handleFormSubmit(e) {
 
   renderTablePage(allColleges, currentPage, roundLabel);
   resultsDiv.style.display = "block";
-  document.getElementById("download-pdf").style.display = "inline-block";
+  document.getElementById("download-pdf").style.display = "inline-flex";
   scrollToResults();
 }
 
@@ -125,40 +175,46 @@ function renderTablePage(data, page, roundLabel) {
   const paginatedData = data.slice(start, end);
 
   let tableHTML = `
-    <h2>🎓 Eligible Colleges</h2>
-    <table id="college-table">
-      <thead>
-        <tr>
-          <th>College Name</th>
-          <th>Branch</th>
-          <th>Category</th>
-          <th>Percentile (${roundLabel})</th>
-        </tr>
-      </thead>
-      <tbody>
+    <h2>Eligible Colleges</h2>
+    <div class="results-table-wrap">
+      <table id="college-table">
+        <thead>
+          <tr>
+            <th>College Name</th>
+            <th>Branch</th>
+            <th>Category</th>
+            <th>Percentile</th>
+            <th>Rank</th>
+          </tr>
+        </thead>
+        <tbody>
   `;
 
-  paginatedData.forEach(college => {
-    const value = college["Percentile"];
-    const display = value === "-1.0" || value === -1.0 ? "Not Available" : (value || "N/A");
+  paginatedData.forEach((college) => {
+    const percentileValue = college["Percentile"];
+    const percentileDisplay = percentileValue === "-1.0" || percentileValue === -1.0 ? "Not Available" : (percentileValue || "N/A");
+    const rankValue = college["Rank"];
+    const rankDisplay = rankValue === "-1" || rankValue === -1 ? "Not Available" : (rankValue || "N/A");
 
     tableHTML += `
-      <tr>
-        <td>${college["College Name"] || "N/A"}</td>
-        <td>${college["Branch"] || "N/A"}</td>
-        <td>${college["Category"] || "N/A"}</td>
-        <td>${display}</td>
-      </tr>
+          <tr>
+            <td data-label="College Name">${college["College Name"] || "N/A"}</td>
+            <td data-label="Branch">${college["Branch"] || "N/A"}</td>
+            <td data-label="Category">${college["Category"] || "N/A"}</td>
+            <td data-label="Percentile (${roundLabel})">${percentileDisplay}</td>
+            <td data-label="Rank">${rankDisplay}</td>
+          </tr>
     `;
   });
 
   tableHTML += `
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
     <div class="pagination">
-      <button id="prev-page" ${page === 1 ? 'disabled' : ''}>⬅️</button>
+      <button id="prev-page" aria-label="Previous page" ${page === 1 ? "disabled" : ""}><i class="fa-solid fa-chevron-left"></i></button>
       <span>Page ${page} of ${Math.ceil(data.length / rowsPerPage)}</span>
-      <button id="next-page" ${end >= data.length ? 'disabled' : ''}>➡️</button>
+      <button id="next-page" aria-label="Next page" ${end >= data.length ? "disabled" : ""}><i class="fa-solid fa-chevron-right"></i></button>
     </div>
   `;
 
@@ -166,14 +222,14 @@ function renderTablePage(data, page, roundLabel) {
 
   document.getElementById("prev-page").onclick = () => {
     if (currentPage > 1) {
-      currentPage--;
+      currentPage -= 1;
       renderTablePage(allColleges, currentPage, roundLabel);
     }
   };
 
   document.getElementById("next-page").onclick = () => {
     if (currentPage * rowsPerPage < allColleges.length) {
-      currentPage++;
+      currentPage += 1;
       renderTablePage(allColleges, currentPage, roundLabel);
     }
   };
@@ -182,18 +238,19 @@ function renderTablePage(data, page, roundLabel) {
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const selectedRound = document.getElementById("round")?.value || "2024";
-  const roundLabel = selectedRound === "2023" ? "2023–24" : "2024–25";
+  const selectedRound = document.getElementById("round")?.value || "2025";
+  const { label: roundLabel } = getRoundConfig(selectedRound);
 
   doc.setFontSize(16);
   doc.text("MHT-CET Eligible Colleges", 14, 20);
 
-  const headers = ["College Name", "Branch", "Category", `Percentile (${roundLabel})`];
-  const rows = allColleges.map(row => [
+  const headers = ["College Name", "Branch", "Category", `Percentile (${roundLabel})`, "Rank"];
+  const rows = allColleges.map((row) => [
     row["College Name"] || "N/A",
     row["Branch"] || "N/A",
     row["Category"] || "N/A",
-    (row["Percentile"] === "-1.0" || row["Percentile"] === -1.0) ? "Not Available" : (row["Percentile"] || "N/A")
+    row["Percentile"] === "-1.0" || row["Percentile"] === -1.0 ? "Not Available" : (row["Percentile"] || "N/A"),
+    row["Rank"] === "-1" || row["Rank"] === -1 ? "Not Available" : (row["Rank"] || "N/A")
   ]);
 
   doc.autoTable({
@@ -218,6 +275,7 @@ function hideLoader() {
   const loader = document.getElementById("loader");
   if (loader) loader.style.display = "none";
 }
+
 function goToHome() {
   if (window.history.length > 1) {
     window.history.back();
@@ -225,6 +283,7 @@ function goToHome() {
     window.location.href = "index.html";
   }
 }
+
 function scrollToResults() {
   const resultsSection = document.getElementById("results");
   if (resultsSection) {
