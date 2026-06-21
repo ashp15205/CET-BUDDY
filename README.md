@@ -8,6 +8,12 @@ Trusted by **700+ students**, it aggregates over **226,000+ verified cutoff reco
 
 [![Deploy with Vercel](https://vercel.com/button)](https://cet-buddy.vercel.app/)
 
+## ☕ Support this Project
+
+If CET Buddy helped you save time during counselling, consider buying me a coffee! It helps keep the servers running and the project 100% ad-free.
+
+<a href="https://www.buymeacoffee.com/ashishp05" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 181px !important;" ></a>
+
 ## 🚀 Why CET Buddy?
 
 ✅ **Instant College Predictions** based on your percentile  
