@@ -194,15 +194,23 @@ a {
   box-shadow: var(--shadow-soft);
 }
 
-.hero-content h1 {
+.hero-heading {
   margin: 0;
   max-width: 760px;
   font-family: "Instrument Sans", sans-serif;
   font-size: clamp(2.45rem, 5.8vw, 4.4rem);
   font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.045em;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
   text-wrap: balance;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero-brand {
+  font-size: 0.85em;
+  color: var(--accent);
 }
 
 .hero-copy {
@@ -357,9 +365,15 @@ a {
 .intro-brand-icon {
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 84px;
   height: 84px;
   font-size: 1.7rem;
+  background: #fff;
+  color: #0f62fe;
+  border-radius: 50%;
   box-shadow:
     0 18px 48px rgba(15, 98, 254, 0.22),
     0 0 0 14px rgba(15, 98, 254, 0.08);
@@ -429,6 +443,43 @@ a {
   background: linear-gradient(90deg, #0f62fe 0%, #4ea3ff 55%, #8cc9ff 100%);
   transform-origin: left center;
   animation: introLoad 1.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.3s;
+}
+
+.nav-coffee-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(15, 98, 254, 0.05);
+  border: 1px solid rgba(15, 98, 254, 0.12);
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.nav-coffee-btn i {
+  color: #ff813f;
+}
+
+.nav-coffee-btn:hover {
+  background: rgba(15, 98, 254, 0.1);
+  transform: translateY(-2px);
+}
+
+.footer-disclaimer {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+
+
+.small-coffee {
+  font-size: 0.9rem;
+  color: #ff813f;
 }
 
 .hero-actions {
@@ -548,9 +599,19 @@ a {
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(236, 241, 248, 0.96));
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow:
-    0 40px 90px rgba(17, 19, 24, 0.11),
+    0 32px 72px rgba(17, 19, 24, 0.08),
+    0 12px 24px rgba(17, 19, 24, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  transform: perspective(1400px) rotateY(-8deg) rotateX(4deg);
+  transform: translateY(0);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.device-frame:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 40px 84px rgba(17, 19, 24, 0.12),
+    0 16px 32px rgba(17, 19, 24, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .device-topbar {
@@ -599,6 +660,13 @@ a {
 .mock-field {
   display: grid;
   gap: 6px;
+}
+
+/* Side-by-side row inside the hero mock form (Year + Round) */
+.mock-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .mock-label {
@@ -810,23 +878,108 @@ a {
   text-wrap: balance;
 }
 
-.disclaimer {
-  max-width: 860px;
-  font-size: 0.94rem;
-  line-height: 1.6;
+.footer-author-row {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
 }
 
-.linkedin-link {
+.author-name {
+  white-space: nowrap;
+}
+
+.support-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(17, 19, 24, 0.12);
+  margin: 0 4px;
+}
+
+
+
+.small-coffee {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text);
+  background: rgba(15, 98, 254, 0.05);
+  border: 1px solid rgba(15, 98, 254, 0.12);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.small-coffee:hover {
+  background: rgba(15, 98, 254, 0.1);
+  transform: translateY(-2px);
+}
+
+.small-coffee i {
+  color: #ff813f;
+}
+
+.footer-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(17, 19, 24, 0.08);
+}
+
+.footer-disclaimer i {
+  color: var(--accent);
+  font-size: 1.1rem;
+  margin-top: 2px;
+}
+
+.footer-disclaimer p {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.social-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  margin-left: 8px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   text-decoration: none;
   background: rgba(15, 98, 254, 0.08);
   color: var(--accent);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.social-icon:hover {
+  background: rgba(15, 98, 254, 0.15);
+  transform: translateY(-2px);
+}
+
+.github-icon {
+  background: rgba(17, 19, 24, 0.06);
+  color: var(--text);
+}
+
+.github-icon:hover {
+  background: rgba(17, 19, 24, 0.12);
+}
+
+.coffee-icon {
+  background: rgba(255, 129, 63, 0.1);
+  color: #ff813f;
+}
+
+.coffee-icon:hover {
+  background: rgba(255, 129, 63, 0.18);
 }
 
 .page-loader {

@@ -3,24 +3,75 @@ let fullData = [];
 let currentPage = 1;
 const rowsPerPage = 10;
 const PREDICTOR_STORAGE_KEY = "cetBuddyPredictorSession";
+
+// Maps (year, round) → { file, label }
+// 2025-26: Rounds 1-4 | 2024-25: Rounds 1-3 | 2023-24: Rounds 1-3
 const ROUND_CONFIG = {
-  "2025": { file: "cutoff-25-26.csv", label: "2025-26" },
-  "2024": { file: "cutoff-24-25.csv", label: "2024-25" },
-  "2023": { file: "cutoff-23-24.csv", label: "2023-24" }
+  "2025-1": { file: "cutoff-25-26.csv",              label: "2025-26 CAP Round 1" },
+  "2025-2": { file: "cutoff-cap-round-2-25-26.csv",  label: "2025-26 CAP Round 2" },
+  "2025-3": { file: "cutoff-cap-round-3-25-26.csv",  label: "2025-26 CAP Round 3" },
+  "2025-4": { file: "cutoff-cap-round-4-25-26.csv",  label: "2025-26 CAP Round 4" },
+  "2024-1": { file: "cutoff-24-25.csv",              label: "2024-25 CAP Round 1" },
+  "2024-2": { file: "cutoff-cap-round-2-24-25.csv",  label: "2024-25 CAP Round 2" },
+  "2024-3": { file: "cutoff-cap-round-3-24-25.csv",  label: "2024-25 CAP Round 3" },
+  "2023-1": { file: "cutoff-23-24.csv",              label: "2023-24 CAP Round 1" },
+  "2023-2": { file: "cutoff-cap-round-2-23-24.csv",  label: "2023-24 CAP Round 2" },
+  "2023-3": { file: "cutoff-cap-round-3-23-24.csv",  label: "2023-24 CAP Round 3" },
 };
 
-function getRoundConfig(roundValue) {
-  return ROUND_CONFIG[roundValue] || ROUND_CONFIG["2025"];
+function getRoundConfig(year, round) {
+  const key = `${year}-${round}`;
+  return ROUND_CONFIG[key] || ROUND_CONFIG["2025-1"];
+}
+
+// Which rounds are available per year
+const AVAILABLE_ROUNDS = {
+  "2025": [1, 2, 3, 4],
+  "2024": [1, 2, 3],
+  "2023": [1, 2, 3],
+};
+
+function updateRoundOptions() {
+  const year = document.getElementById("year")?.value || "2025";
+  const roundSelect = document.getElementById("round");
+  if (!roundSelect) return;
+
+  const available = AVAILABLE_ROUNDS[year] || [1];
+  const currentRound = parseInt(roundSelect.value, 10);
+
+  [...roundSelect.options].forEach((opt) => {
+    const roundNum = parseInt(opt.value, 10);
+    opt.disabled = !available.includes(roundNum);
+    opt.style.color = opt.disabled ? "#aaa" : "";
+  });
+
+  // If current selection is now disabled, reset to Round 1
+  if (!available.includes(currentRound)) {
+    roundSelect.value = "1";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  updateRoundOptions();
   await loadCSVandPrepareDropdowns();
 
   document.getElementById("predict-form").addEventListener("submit", handleFormSubmit);
   document.getElementById("download-pdf").addEventListener("click", downloadPDF);
+
+  document.getElementById("year").addEventListener("change", async () => {
+    updateRoundOptions();
+    await loadCSVandPrepareDropdowns();
+  });
+
   document.getElementById("round").addEventListener("change", async () => {
     await loadCSVandPrepareDropdowns();
   });
+
+  const branchEl = document.getElementById("branch");
+  const categoryEl = document.getElementById("category");
+  const collegeEl = document.getElementById("college");
+
+  // Removed forced reset listeners to allow filters to act independently
 
   await restoreSessionInputs();
 });
@@ -40,13 +91,22 @@ async function restoreSessionInputs() {
   const form = document.getElementById("predict-form");
   if (!form) return;
 
+  const yearSelect = document.getElementById("year");
   const roundSelect = document.getElementById("round");
-  if (savedState.round && roundSelect && roundSelect.value !== savedState.round) {
-    roundSelect.value = savedState.round;
-    await loadCSVandPrepareDropdowns();
+
+  if (savedState.year && yearSelect && yearSelect.value !== savedState.year) {
+    yearSelect.value = savedState.year;
+    updateRoundOptions();
   }
 
-  const fields = ["percentile", "round", "branch", "category", "college"];
+  if (savedState.round && roundSelect) {
+    const opt = [...roundSelect.options].find(o => o.value === savedState.round && !o.disabled);
+    if (opt) roundSelect.value = savedState.round;
+  }
+
+  await loadCSVandPrepareDropdowns();
+
+  const fields = ["percentile", "branch", "category", "college"];
   fields.forEach((field) => {
     const element = document.getElementById(field);
     const value = savedState[field];
@@ -65,8 +125,9 @@ async function restoreSessionInputs() {
 }
 
 async function loadCSVandPrepareDropdowns() {
-  const selectedRound = document.getElementById("round")?.value || "2025";
-  const { file } = getRoundConfig(selectedRound);
+  const year  = document.getElementById("year")?.value  || "2025";
+  const round = document.getElementById("round")?.value || "1";
+  const { file } = getRoundConfig(year, round);
 
   return new Promise((resolve) => {
     Papa.parse(file, {
@@ -96,6 +157,9 @@ async function loadCSVandPrepareDropdowns() {
 }
 
 function populateSelect(selectEl, items, placeholder) {
+  if (!selectEl) return;
+  const currentValue = selectEl.value; // Store the previous value
+  
   selectEl.innerHTML = `<option value="">${placeholder}</option>`;
   items.forEach((item) => {
     const option = document.createElement("option");
@@ -103,6 +167,11 @@ function populateSelect(selectEl, items, placeholder) {
     option.textContent = item;
     selectEl.appendChild(option);
   });
+  
+  // Restore previous value if it is still a valid option
+  if (currentValue && items.includes(currentValue)) {
+    selectEl.value = currentValue;
+  }
 }
 
 function handleFormSubmit(event) {
@@ -114,8 +183,9 @@ function handleFormSubmit(event) {
   sessionStorage.setItem(PREDICTOR_STORAGE_KEY, JSON.stringify({ ...payload, autoSubmit: false }));
 
   const percentile = parseFloat(payload.percentile);
-  const roundYear = payload.round;
-  const { label: roundLabel } = getRoundConfig(roundYear);
+  const year  = payload.year  || "2025";
+  const round = payload.round || "1";
+  const { label: roundLabel } = getRoundConfig(year, round);
 
   if (isNaN(percentile) || percentile < 0 || percentile > 100) {
     alert("Please enter a valid percentile between 0 and 100.");
@@ -156,7 +226,7 @@ function handleFormSubmit(event) {
   const resultsDiv = document.getElementById("results");
 
   if (allColleges.length === 0) {
-    resultsDiv.innerHTML = `<h2>Eligible Colleges</h2><p>No colleges found for CAP Round ${roundLabel}.<br>Try changing filters or round.</p>`;
+    resultsDiv.innerHTML = `<h2>Eligible Colleges</h2><p>No colleges found for ${roundLabel}.<br>Try changing filters or round.</p>`;
     resultsDiv.style.display = "block";
     document.getElementById("download-pdf").style.display = "none";
     scrollToResults();
@@ -176,6 +246,7 @@ function renderTablePage(data, page, roundLabel) {
 
   let tableHTML = `
     <h2>Eligible Colleges</h2>
+    <p class="results-meta">${data.length} result${data.length !== 1 ? "s" : ""} for <strong>${roundLabel}</strong></p>
     <div class="results-table-wrap">
       <table id="college-table">
         <thead>
@@ -238,8 +309,9 @@ function renderTablePage(data, page, roundLabel) {
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const selectedRound = document.getElementById("round")?.value || "2025";
-  const { label: roundLabel } = getRoundConfig(selectedRound);
+  const year  = document.getElementById("year")?.value  || "2025";
+  const round = document.getElementById("round")?.value || "1";
+  const { label: roundLabel } = getRoundConfig(year, round);
 
   doc.setFontSize(16);
   doc.text("MHT-CET Eligible Colleges", 14, 20);
