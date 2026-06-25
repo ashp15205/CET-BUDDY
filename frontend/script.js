@@ -71,24 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const categoryEl = document.getElementById("category");
   const collegeEl = document.getElementById("college");
 
-  // Removed forced reset listeners to allow filters to act independently
-
-  const donationModal = document.getElementById("donation-modal");
-  if (donationModal) {
-    document.getElementById("close-modal")?.addEventListener("click", () => {
-      donationModal.style.display = "none";
-    });
-    document.getElementById("skip-donation")?.addEventListener("click", () => {
-      donationModal.style.display = "none";
-    });
-    // Close modal on clicking outside
-    donationModal.addEventListener("click", (e) => {
-      if (e.target === donationModal) {
-        donationModal.style.display = "none";
-      }
-    });
-  }
-
   await restoreSessionInputs();
 });
 
@@ -353,10 +335,6 @@ function downloadPDF() {
 
   doc.save("mhtcet_colleges.pdf");
   
-  const donationModal = document.getElementById("donation-modal");
-  if (donationModal) {
-    donationModal.style.display = "flex";
-  }
 }
 
 function showLoader() {
