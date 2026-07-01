@@ -4,19 +4,90 @@ let currentPage = 1;
 const rowsPerPage = 10;
 const PREDICTOR_STORAGE_KEY = "cetBuddyPredictorSession";
 
+const DISTRICT_MAP = {
+  'Mumbai': ['Mumbai', 'Bandra', 'Andheri', 'Sion', 'Matunga', 'Kurla', 'Chembur', 'Vidyavihar', 'Ghatkopar', 'Mahim', 'Borivali', 'Dadar', 'Vile Parle', "Svkm's", "Bhagubhai Mafatlal", 'Navjeevan', 'Somaiya'],
+  'Mumbai Suburban': ['Mumbai Suburban'],
+  'Pune': ['Pune', 'Pimpri', 'Chinchwad', 'Ravet', 'Talegaon', 'Pisoli', 'Ambegaon', 'Narhe', 'Sasewadi', 'Indapur', 'Baramati', 'Lonavala', 'Akurdi', 'Wagholi', 'Bhor', 'Khed', 'Shirur', 'Junnar', 'Dhankavdi', 'Katraj', 'Kothrud', 'Karvenagar', 'Hadapsar', 'Bavdhan', 'Nigdi', 'Alandi', 'Dapodi', 'Avasari Khurd', 'Dumbarwadi', 'Someshwar Nagar', 'Navsahyadri', 'Lakhewadi', 'JSPM', 'Nextgen', 'LOHIA', 'COEP', 'DNYANVILAS', 'Samarth', 'Imperial College', 'Rajgad', 'Jaihind', 'Sinhgad', "PVG's"],
+  'Thane': ['Thane', 'Badlapur', 'Kalyan', 'Dombivli', 'Ulhasnagar', 'Ambernath', 'Bhiwandi', 'Mumbra', 'Shahapur', 'Titwala', 'Bhayandar', 'Bhayinder', 'Pravin Rohidas', 'Devi Mahalaxmi'],
+  'Navi Mumbai': ['Navi Mumbai', 'Vashi', 'Nerul', 'Belapur', 'Kharghar', 'Panvel', 'Kopar Khairane', 'Airoli', 'Sanpada'],
+  'Palghar': ['Palghar', 'Vasai', 'Virar', 'Boisar', 'Dahanu', 'Wada', 'Nalasopara', 'Gokhiware', 'Thakur Shree DPS', 'Viva Institute'],
+  'Raigad': ['Raigad', 'Karjat', 'Lonere', 'Panvel', 'Khopoli', 'Alibag', 'Mangaon', 'Pen', 'Roha', 'Mahad', 'Bhivpuri', 'Tasgaonkar'],
+  'Nashik': ['Nashik', 'Sinnar', 'Malegaon', 'Igatpuri', 'Ozar', 'Pimpalgaon', 'Chandwad', 'Nandgaon', 'Manmad', 'Matoshri Aasarabai'],
+  'Ahmednagar': ['Ahmednagar', 'Shrirampur', 'Kopargaon', 'Sangamner', 'Loni', 'Rahuri', 'Shrigonda', 'Shrigondha', 'Parner', 'Shevgaon', 'Pathardi', 'Ashok Institute', 'Parikrama', 'Malwadi', 'Atma Malik', 'VAMANRAO ITHAPE', 'Phulepimpalgaon', 'V.K. Patil'],
+  'Solapur': ['Solapur', 'Barshi', 'Pandharpur', 'Akkalkot', 'Sangola', 'Karmala', 'Madha', 'Mangalwedha', 'Akluj', 'Paniv', 'Karmayogi'],
+  'Kolhapur': ['Kolhapur', 'Ichalkaranji', 'Jaysingpur', 'Hatkanangle', 'Shirol', 'Panhala', 'Gadhinglaj', 'Warananagar', 'Gargoti', 'Sanjay Ghodawat', 'Ashokrao Mane', 'Sanjeevan', 'Abitkar', 'Tatyasaheb Kore', 'Yelur'],
+  'Sangli': ['Sangli', 'Miraj', 'Islampur', 'Tasgaon', 'Vita', 'Palus', 'Shirala', 'Walva', 'Sangali'],
+  'Satara': ['Satara', 'Karad', 'Phaltan', 'Wai', 'Mahabaleshwar', 'Khandala', 'Patan', 'Koregaon', 'Wadwadi'],
+  'Nagpur': ['Nagpur', 'Ramtek', 'Kamptee', 'Umred', 'Katol', 'Hingna', 'Savner'],
+  'Amravati': ['Amravati', 'Badnera', 'Achalpur', 'Anjangaon', 'Morshi', 'Warud', 'Daryapur'],
+  'Akola': ['Akola', 'Akot', 'Balapur', 'Murtizapur', 'Telhara'],
+  'Buldhana': ['Buldhana', 'Khamgaon', 'Shegaon', 'Malkapur', 'Chikhli', 'Mehkar'],
+  'Washim': ['Washim', 'Karanja', 'Mangrulpir', 'Risod'],
+  'Yavatmal': ['Yavatmal', 'Pusad', 'Darwha', 'Digras', 'Umarkhed', 'Wani'],
+  'Wardha': ['Wardha', 'Hinganghat', 'Arvi', 'Sevagram', 'Deoli'],
+  'Chandrapur': ['Chandrapur', 'Ballarpur', 'Bhadravati', 'Rajura', 'Warora', 'Bramhapuri'],
+  'Gadchiroli': ['Gadchiroli', 'Desaiganj', 'Aheri'],
+  'Bhandara': ['Bhandara', 'Tumsar', 'Pauni'],
+  'Gondia': ['Gondia', 'Tirora'],
+  'Aurangabad': ['Aurangabad', 'Chhatrapati Sambhajinagar', 'Paithan', 'Vaijapur', 'Sillod', 'Kannad', 'Sant Eknath', 'Ohar', 'ICEEM', 'CDS', 'Mangaldeep'],
+  'Jalna': ['Jalna', 'Ambad', 'Bhokardan', 'Partur'],
+  'Beed': ['Beed', 'Ambejogai', 'Parli', 'Ashti', 'Majalgaon', 'Georai', 'Kada'],
+  'Osmanabad': ['Osmanabad', 'Dharashiv', 'Tuljapur', 'Omerga', 'Bhum', 'Paranda', 'Kalamb'],
+  'Latur': ['Latur', 'Udgir', 'Ausa', 'Nilanga', 'Ahmedpur'],
+  'Nanded': ['Nanded', 'Degloor', 'Mukhed', 'Kinwat', 'Loha'],
+  'Parbhani': ['Parbhani', 'Pathri', 'Jintur', 'Gangakhed', 'Sailu'],
+  'Hingoli': ['Hingoli', 'Basmath', 'Kalamnuri'],
+  'Jalgaon': ['Jalgaon', 'Bhusawal', 'Amalner', 'Chalisgaon', 'Pachora', 'Raver', 'Jamner', 'Faizpur'],
+  'Dhule': ['Dhule', 'Shirpur', 'Dondaicha', 'Sakri'],
+  'Nandurbar': ['Nandurbar', 'Shahada', 'Navapur'],
+  'Ratnagiri': ['Ratnagiri', 'Chiplun', 'Dapoli', 'Khed', 'Guhagar', 'Rajapur', 'Ambav Deorukh'],
+  'Sindhudurg': ['Sindhudurg', 'Kankavli', 'Malvan', 'Sawantwadi', 'Kudal', 'Devgad', 'Vengurla']
+};
+
+function getDistrict(collegeName) {
+  if (!collegeName) return "Other";
+  const nameLower = collegeName.toLowerCase();
+
+  // Try checking the last part after the comma first (usually city/town)
+  const parts = collegeName.split(',');
+  if (parts.length > 1) {
+    const lastPart = parts[parts.length - 1].toLowerCase();
+    for (const [district, keywords] of Object.entries(DISTRICT_MAP)) {
+      for (const kw of keywords) {
+        const regex = new RegExp(`\\b${kw.toLowerCase()}\\b`);
+        if (regex.test(lastPart)) {
+          return district;
+        }
+      }
+    }
+  }
+
+  // Fallback: check the entire name
+  for (const [district, keywords] of Object.entries(DISTRICT_MAP)) {
+    for (const kw of keywords) {
+      const regex = new RegExp(`\\b${kw.toLowerCase()}\\b`);
+      if (regex.test(nameLower)) {
+        return district;
+      }
+    }
+  }
+
+  return "Other";
+}
+
 // Maps (year, round) → { file, label }
 // 2025-26: Rounds 1-4 | 2024-25: Rounds 1-3 | 2023-24: Rounds 1-3
 const ROUND_CONFIG = {
-  "2025-1": { file: "cutoff-25-26.csv",              label: "2025-26 CAP Round 1" },
-  "2025-2": { file: "cutoff-cap-round-2-25-26.csv",  label: "2025-26 CAP Round 2" },
-  "2025-3": { file: "cutoff-cap-round-3-25-26.csv",  label: "2025-26 CAP Round 3" },
-  "2025-4": { file: "cutoff-cap-round-4-25-26.csv",  label: "2025-26 CAP Round 4" },
-  "2024-1": { file: "cutoff-24-25.csv",              label: "2024-25 CAP Round 1" },
-  "2024-2": { file: "cutoff-cap-round-2-24-25.csv",  label: "2024-25 CAP Round 2" },
-  "2024-3": { file: "cutoff-cap-round-3-24-25.csv",  label: "2024-25 CAP Round 3" },
-  "2023-1": { file: "cutoff-23-24.csv",              label: "2023-24 CAP Round 1" },
-  "2023-2": { file: "cutoff-cap-round-2-23-24.csv",  label: "2023-24 CAP Round 2" },
-  "2023-3": { file: "cutoff-cap-round-3-23-24.csv",  label: "2023-24 CAP Round 3" },
+  "2025-1": { file: "cutoff-25-26.csv", label: "2025-26 CAP Round 1" },
+  "2025-2": { file: "cutoff-cap-round-2-25-26.csv", label: "2025-26 CAP Round 2" },
+  "2025-3": { file: "cutoff-cap-round-3-25-26.csv", label: "2025-26 CAP Round 3" },
+  "2025-4": { file: "cutoff-cap-round-4-25-26.csv", label: "2025-26 CAP Round 4" },
+  "2024-1": { file: "cutoff-24-25.csv", label: "2024-25 CAP Round 1" },
+  "2024-2": { file: "cutoff-cap-round-2-24-25.csv", label: "2024-25 CAP Round 2" },
+  "2024-3": { file: "cutoff-cap-round-3-24-25.csv", label: "2024-25 CAP Round 3" },
+  "2023-1": { file: "cutoff-23-24.csv", label: "2023-24 CAP Round 1" },
+  "2023-2": { file: "cutoff-cap-round-2-23-24.csv", label: "2023-24 CAP Round 2" },
+  "2023-3": { file: "cutoff-cap-round-3-23-24.csv", label: "2023-24 CAP Round 3" },
 };
 
 function getRoundConfig(year, round) {
@@ -69,7 +140,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const branchEl = document.getElementById("branch");
   const categoryEl = document.getElementById("category");
-  const collegeEl = document.getElementById("college");
+  document.getElementById("city")?.addEventListener("change", updateCollegeDropdown);
+
+  const donationModal = document.getElementById("donation-modal");
+  if (donationModal) {
+    document.getElementById("close-modal")?.addEventListener("click", () => {
+      donationModal.style.display = "none";
+    });
+    document.getElementById("skip-donation")?.addEventListener("click", () => {
+      donationModal.style.display = "none";
+    });
+    // Close modal on clicking outside
+    donationModal.addEventListener("click", (e) => {
+      if (e.target === donationModal) {
+        donationModal.style.display = "none";
+      }
+    });
+  }
 
   await restoreSessionInputs();
 });
@@ -104,7 +191,7 @@ async function restoreSessionInputs() {
 
   await loadCSVandPrepareDropdowns();
 
-  const fields = ["percentile", "branch", "category", "college"];
+  const fields = ["percentile", "branch", "category", "college", "city"];
   fields.forEach((field) => {
     const element = document.getElementById(field);
     const value = savedState[field];
@@ -123,7 +210,7 @@ async function restoreSessionInputs() {
 }
 
 async function loadCSVandPrepareDropdowns() {
-  const year  = document.getElementById("year")?.value  || "2025";
+  const year = document.getElementById("year")?.value || "2025";
   const round = document.getElementById("round")?.value || "1";
   const { file } = getRoundConfig(year, round);
 
@@ -142,11 +229,14 @@ async function loadCSVandPrepareDropdowns() {
         )].sort();
 
         const branches = [...new Set(fullData.map((d) => d["Branch"]).filter(Boolean))].sort();
-        const colleges = [...new Set(fullData.map((d) => d["College Name"]).filter(Boolean))].sort();
+
+        const cities = [...new Set(fullData.map((d) => getDistrict(d["College Name"])).filter(Boolean))].sort();
 
         populateSelect(document.getElementById("category"), categories, "Select Category");
         populateSelect(document.getElementById("branch"), branches, "Select Branch");
-        populateSelect(document.getElementById("college"), colleges, "Select College");
+        populateSelect(document.getElementById("city"), cities, "Select District");
+
+        updateCollegeDropdown();
 
         resolve();
       }
@@ -154,10 +244,22 @@ async function loadCSVandPrepareDropdowns() {
   });
 }
 
+function updateCollegeDropdown() {
+  const selectedCity = document.getElementById("city")?.value;
+  let filteredColleges = fullData.map((d) => d["College Name"]).filter(Boolean);
+  if (selectedCity) {
+    filteredColleges = filteredColleges.filter((name) => {
+      return getDistrict(name) === selectedCity;
+    });
+  }
+  const colleges = [...new Set(filteredColleges)].sort();
+  populateSelect(document.getElementById("college"), colleges, "Select College");
+}
+
 function populateSelect(selectEl, items, placeholder) {
   if (!selectEl) return;
   const currentValue = selectEl.value; // Store the previous value
-  
+
   selectEl.innerHTML = `<option value="">${placeholder}</option>`;
   items.forEach((item) => {
     const option = document.createElement("option");
@@ -165,7 +267,7 @@ function populateSelect(selectEl, items, placeholder) {
     option.textContent = item;
     selectEl.appendChild(option);
   });
-  
+
   // Restore previous value if it is still a valid option
   if (currentValue && items.includes(currentValue)) {
     selectEl.value = currentValue;
@@ -181,7 +283,7 @@ function handleFormSubmit(event) {
   sessionStorage.setItem(PREDICTOR_STORAGE_KEY, JSON.stringify({ ...payload, autoSubmit: false }));
 
   const percentile = parseFloat(payload.percentile);
-  const year  = payload.year  || "2025";
+  const year = payload.year || "2025";
   const round = payload.round || "1";
   const { label: roundLabel } = getRoundConfig(year, round);
 
@@ -212,6 +314,12 @@ function handleFormSubmit(event) {
     filtered = filtered.filter((row) =>
       row["College Name"]?.toLowerCase().includes(payload.college.toLowerCase())
     );
+  }
+
+  if (payload.city) {
+    filtered = filtered.filter((row) => {
+      return getDistrict(row["College Name"]) === payload.city;
+    });
   }
 
   allColleges = filtered.sort((a, b) =>
@@ -307,7 +415,7 @@ function renderTablePage(data, page, roundLabel) {
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const year  = document.getElementById("year")?.value  || "2025";
+  const year = document.getElementById("year")?.value || "2025";
   const round = document.getElementById("round")?.value || "1";
   const { label: roundLabel } = getRoundConfig(year, round);
 
@@ -334,7 +442,7 @@ function downloadPDF() {
   });
 
   doc.save("mhtcet_colleges.pdf");
-  
+
 }
 
 function showLoader() {
